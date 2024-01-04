@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -8,6 +8,11 @@ import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
+import Drawer from "@mui/material/Drawer";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import { Link } from "react-router-dom";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -39,7 +44,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   width: "100%",
   "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
+
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
     [theme.breakpoints.up("sm")]: {
@@ -51,7 +56,25 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+const DrawerContent = ({ onClose }) => (
+  <List>
+    <ListItem component={Link} to="/home" onClick={onClose}>
+      <ListItemText primary="Inicio" />
+    </ListItem>
+  </List>
+);
+
 export default function SearchAppBar() {
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const handleDrawerOpen = () => {
+    setDrawerOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setDrawerOpen(false);
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -62,13 +85,15 @@ export default function SearchAppBar() {
             color="inherit"
             aria-label="open drawer"
             sx={{ mr: 2 }}
+            onClick={handleDrawerOpen}
           >
             <MenuIcon />
           </IconButton>
           <Typography
             variant="h6"
             noWrap
-            component="div"
+            component={Link}
+            to="/home"
             sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
           >
             TMDB
@@ -84,6 +109,14 @@ export default function SearchAppBar() {
           </Search>
         </Toolbar>
       </AppBar>
+      <Drawer
+        anchor="left"
+        open={drawerOpen}
+        onClose={handleDrawerClose}
+        sx={{ width: 200 }}
+      >
+        <DrawerContent onClose={handleDrawerClose} />
+      </Drawer>
     </Box>
   );
 }
